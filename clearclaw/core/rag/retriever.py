@@ -11,6 +11,7 @@ from typing import List, Tuple
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import TextLoader, PyPDFLoader, Docx2txtLoader
 
+from .hybrid_search import HybridSearcher
 from .vector_store import get_db
 
 from pathlib import Path
@@ -157,7 +158,20 @@ def index_knowledge(directory: str) -> int:
 
 def search_knowledge(query: str, top_k: int = 5) -> List[Tuple[str, float, dict]]:
     """检索知识"""
-    return get_db().search(query, top_k)
+    db = get_db()
+
+    # 获取所有文档用于BM25
+    all_data = db.collection.get()
+    documents = all_data["documents"] if all_data["documents"] else []
+
+    if not documents:
+        return []
+
+    # 创建混合检索器并执行
+    searcher = HybridSearcher(db, documents)
+    results = searcher.search(query, top_k)
+
+    return results
 
 
 def get_context(query: str, top_k: int = 3) -> str:

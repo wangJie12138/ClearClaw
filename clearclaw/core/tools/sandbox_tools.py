@@ -1,9 +1,13 @@
 import os
 import subprocess
+from pathlib import Path
+
 from .base import clearClaw_tool
 from ..config import OFFICE_DIR
 import re
 import platform
+from PyPDF2 import PdfReader
+from docx import Document
 
 SYS_OS = platform.system()
 
@@ -59,13 +63,40 @@ def read_office_file(filepath: str) -> str:
         target_path = _get_safe_path(filepath)
         if not os.path.exists(target_path):
             return f"文件不存在：{filepath}"
-        
-        with open(target_path, "r", encoding="utf-8") as f:
-            content = f.read()
-            # 防爆截断：防止读取几个 G 的日志把 Token 撑爆
-            if len(content) > 10000:
-                return content[:10000] + "\n\n...[内容过长，已被安全截断]..."
-            return content
+
+        # 获取文件扩展名
+        ext = Path(filepath).suffix.lower()
+
+        print(f"---------------------{ext}-----------------------")
+
+        # ===== Word 文档 (.docx) =====
+        if ext == '.docx':
+            try:
+                doc = Document(target_path)
+                content = "\n".join([p.text for p in doc.paragraphs])
+            except ImportError:
+                return "读取Word文件失败！！！"
+
+        # ===== PDF 文档 (.pdf) =====
+        elif ext == '.pdf':
+            try:
+                reader = PdfReader(target_path)
+                content = ""
+                for page in reader.pages:
+                    content += page.extract_text()
+            except ImportError:
+                return "读取PDF文件失败！！！"
+
+        # 纯文本/Markdown/py
+        else:
+            with open(target_path, "r", encoding="utf-8") as f:
+                content = f.read()
+
+        # 防爆截断
+        if len(content) > 10000:
+            return content[:10000] + "\n\n...[内容过长，已被安全截断]..."
+        return content
+
     except Exception as e:
         return str(e)
     

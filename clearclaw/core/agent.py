@@ -75,7 +75,7 @@ def create_agent_app(
                     f"要求：客观、精简，不要输出任何解释性废话，直接返回最新的记忆文本，总字数不要超过150字"
                 )
         
-            # 这里可以用便宜模型
+            # TODO: 这里可以用便宜模型
             new_summary_response = llm.invoke([HumanMessage(content=summary_prompt)], config={"callbacks":[]})
             active_summary = new_summary_response.content
 
@@ -170,8 +170,8 @@ def create_agent_app(
 
     workflow.add_edge(START, "agent")
 
-    # 每次 agent 思考完，检查它有没有发出工具调用指令。
-    # tools_condition 会自动判断：有指令 -> 走向 "tools" 节点；没指令 -> 走向 END。
+    # 每次agent思考完，检查它有没有发出工具调用指令。
+    # tools_condition(LangGraph内置的路由判断函数)会自动判断：有指令 -> 走向 "tools" 节点；没指令 -> 走向END。
     workflow.add_conditional_edges("agent", tools_condition)
 
     workflow.add_edge("tools", "agent")

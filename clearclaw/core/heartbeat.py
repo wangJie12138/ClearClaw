@@ -10,24 +10,30 @@ async def pacemaker_loop(task_queue: asyncio.Queue, check_interval: int = 10):
     """
     后台心脏起搏器协程（带并发锁和循环任务续期功能）
     """
+
+    print("[心跳❤] pacemaker_loop 已启动！")
+
     while True:
         await asyncio.sleep(check_interval)
         
         if not os.path.exists(TASKS_FILE):
+            # print(f"[心跳❤] 任务文件不存在: {TASKS_FILE}")
             continue
             
         now = datetime.now()
         pending_tasks = []
         triggered_tasks = []
 
-        # 线程锁，防止多线程/多协程同时读写任务文件导致的竞争条件和数据损坏
+        # 线程锁，防止多线程/多协程同时读写任务文件导致的竞争和数据损坏
         with tasks_lock:
             try:
                 with open(TASKS_FILE, "r", encoding="utf-8") as f:
                     content = f.read().strip()
+                    # print(f"[心跳❤] 文件内容: {content}")
                     if not content:
                         continue
                     tasks = json.loads(content)
+                    # print(f"[心跳❤] 解析到 {len(tasks)} 个任务")
             except Exception:
                 continue
                 
@@ -36,11 +42,15 @@ async def pacemaker_loop(task_queue: asyncio.Queue, check_interval: int = 10):
 
             for t in tasks:
                 try:
-                    # 这个target_dt 是任务的目标触发时间
+                    # 这个target_dt是任务的目标触发时间
                     target_dt = datetime.strptime(t["target_time"], "%Y-%m-%d %H:%M:%S")
+                    # print(f"任务: {t['description']} | 目标: {target_dt} | 当前: {now}")
                     if now >= target_dt:
+                        print(f"任务到期！")
 
                         triggered_tasks.append(t) # 记录为“需要触发”
+
+                        # print(f"发现 {len(triggered_tasks)} 个任务到期！")
 
                         # 如果是循环任务就把次数减1，次数耗尽就不再触发
                         repeat_freq = t.get("repeat")
@@ -96,4 +106,5 @@ async def pacemaker_loop(task_queue: asyncio.Queue, check_interval: int = 10):
                 f"你设定的定时任务已到期，请立即主动提醒用户或执行动作。\n"
                 f"任务内容：{t['description']}"
             )
+            # print(f"[心跳❤] 放入队列: {system_msg[:50]}...")
             await task_queue.put(system_msg)

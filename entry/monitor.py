@@ -26,7 +26,7 @@ PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOG_FILE = os.path.join(PROJECT_ROOT, "logs", "local_geek_master.jsonl")
 
 def print_header():
-    """渲染 简约斜体版·ClearClaw 监控面板"""
+    """ClearClaw监控面板"""
     
     monster = (
         "  ▄█▄▄█▄  \n"
@@ -72,7 +72,7 @@ def tail_f(filepath):
             yield line
 
 def render_event(line: str):
-    """解析并渲染监控日志 (100% 中文还原)"""
+    """解析并渲染监控日志"""
     try:
         data = json.loads(line.strip())
         event = data.get("event")
@@ -88,7 +88,7 @@ def render_event(line: str):
         
         if event == "llm_input":
             count = data.get("message_count", 0)
-            console.print(f"{prefix}[llm_input]🧠 神经元唤醒：发送了 {count} 条上下文记忆...[/llm_input]")
+            console.print(f"{prefix}[llm_input] 神经元唤醒：发送了 {count} 条上下文记忆...[/llm_input]")
             
         elif event == "tool_call":
             tool_name = data.get("tool", "unknown")

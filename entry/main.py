@@ -105,7 +105,7 @@ def check_config():
     env_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".env")
     load_dotenv(env_path)
 
-    # 检查是否有任何 API Key
+    # 检查是否有任何API Key
     has_key = (
         os.getenv("DASHSCOPE_API_KEY") or
         os.getenv("OPENAI_API_KEY") or
@@ -137,7 +137,7 @@ def check_config():
 
 async def async_main():
 
-    # ===== 自动索引知识库 =====
+    # 自动索引知识库(RAG)
     ensure_indexed(DEFAULT_KNOWLEDGE_DIR)
 
     print_banner()
@@ -308,6 +308,7 @@ async def async_main():
             heartbeat_worker = asyncio.create_task(pacemaker_loop(task_queue=task_queue, check_interval=10))
             await user_input_loop()
             await task_queue.join()
+            # 程序退出时需要清理资源
             worker.cancel()
             heartbeat_worker.cancel()
 
