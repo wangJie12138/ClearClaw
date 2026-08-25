@@ -18,7 +18,7 @@ os.chdir(PROJECT_ROOT)
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
-app = typer.Typer(help="ClearClaw - 智能终端")
+app = typer.Typer(help="clearclaw - 智能终端")
 console = Console()
 
 clear_style = questionary.Style([
@@ -37,8 +37,8 @@ ENV_PATH = os.path.join(PROJECT_ROOT, ".env")
 def config_wizard():
     console.clear()
     console.print(Panel(
-        "Welcome to [bold #8d52ff]ClearClaw[/bold #8d52ff]...\n\n[dim] 请完成模型配置，我们将把密钥安全固化在本地。[/dim]",
-        title="[bold white]✦  ClearClaw Config[/bold white]",
+        "Welcome to [bold #8d52ff]clearclaw[/bold #8d52ff]...\n\n[dim] 请完成模型配置，我们将把密钥安全固化在本地。[/dim]",
+        title="[bold white]✦  clearclaw Config[/bold white]",
         border_style="#8d52ff"
     ))
     provider_raw = questionary.select(
@@ -49,7 +49,7 @@ def config_wizard():
     ).ask()
 
     if not provider_raw:
-        console.print("[dim #8d52ff]✦   录入中断，ClearClaw 配置已取消。[/dim #8d52ff]")
+        console.print("[dim #8d52ff]✦   录入中断，clearclaw 配置已取消。[/dim #8d52ff]")
         return
 
     provider = provider_raw.split(" ")[0].strip()

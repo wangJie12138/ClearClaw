@@ -39,11 +39,11 @@ def print_header():
     content = Text(justify="center")
     content.append("\n  Live Stream  \n\n", style="bold white italic")
     content.append(monster + "\n\n", style="color(141)")
-    content.append("   What is ClearClaw doing?    \n", style="dim white italic")
+    content.append("   What is clearclaw doing?    \n", style="dim white italic")
 
     panel = Panel(
         Align.center(content),  
-        title="[bold color(141)] ClearClaw [/bold color(141)]",
+        title="[bold color(141)] clearclaw [/bold color(141)]",
         title_align="left",
         border_style="color(141)",
         box=box.ROUNDED,

@@ -109,7 +109,7 @@ ClearClaw 支持**OpenClaw**技能和**Claude Code**技能，可直接使用两�
 1. 安装
 ```bash
 git clone https://github.com/wangJie12138/ClearClaw.git
-cd ClearClaw
+cd clearclaw
 pip install -e .
 ```
 
@@ -169,7 +169,7 @@ python3 -c "from tests.test_two_phase_skills import run_tests; run_tests()"
 ```bash
 # 克隆项目
 git clone https://github.com/wangJie12138/ClearClaw.git
-cd ClearClaw
+cd clearclaw
 
 # 创建虚拟环境
 python3 -m venv venv

@@ -5,7 +5,7 @@ test: 查看持久化会话数据
 import sqlite3
 import os
 
-DB_PATH = "/ClearClaw/workspace/state.sqlite3"
+DB_PATH = "/clearclaw/workspace/state.sqlite3"
 
 def inspect_sqlite():
     if not os.path.exists(DB_PATH):

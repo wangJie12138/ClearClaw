@@ -1,4 +1,4 @@
-# ClearClaw 核心依赖
+# clearclaw 核心依赖
 # 安装：pip install -r requirements.txt
 
 # CLI 交互

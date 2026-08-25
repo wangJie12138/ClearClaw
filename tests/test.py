@@ -7,7 +7,7 @@ from pathlib import Path
 
 import sqlite3
 
-db_path = Path(r"/ClearClaw/clearclaw/core/workspace/vector_db/chroma.sqlite3")
+db_path = Path(r"/clearclaw/clearclaw/core/workspace/vector_db/chroma.sqlite3")
 if not db_path.exists():
     print(f"❌ 找不到数据库文件: {db_path}")
     exit()
